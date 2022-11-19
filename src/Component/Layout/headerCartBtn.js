@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CartIcon from "../Cart/CartIcon";
 import classes from "./headerCartBtn.module.css";
 import { useSelector } from "react-redux";
@@ -19,7 +19,7 @@ const HeaderCartBtn = props => {
     return () => {
       clearTimeout(timer)
     }
-  }, [items]);
+  }, [items,totalQuantity]);
   return (
     <button className={btnClasses} onClick={props.onClick}>
       <span className={classes.icon}>
