@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import CartIcon from "../Cart/CartIcon";
 import classes from "./headerCartBtn.module.css";
-import CartContext from "./../../store/cart-context";
+import { useSelector } from "react-redux";
 const HeaderCartBtn = props => {
   const[btnLighted,setBtnLighted]=useState(false)
-  const context = useContext(CartContext);
-  const numberOfCartItems = context.items.reduce((curNumber, item) => {
-    return curNumber + item.amount;
-  }, 0);
+  const totalQuantity = useSelector(state=>state.cart.totalQuantity);
+  const items = useSelector(state=>state.cart.items);
+
   const btnClasses = `${classes.button} ${btnLighted? classes.bump:''}`;
   useEffect(() => {
-    if (context.items.length === 0) {
+    if (totalQuantity === 0) {
       return
     }
     setBtnLighted(true);
@@ -20,14 +19,14 @@ const HeaderCartBtn = props => {
     return () => {
       clearTimeout(timer)
     }
-  }, [context.items]);
+  }, [items]);
   return (
     <button className={btnClasses} onClick={props.onClick}>
       <span className={classes.icon}>
         <CartIcon />
       </span>
       <span>Your Cart</span>
-      <span className={classes.badge}>{ numberOfCartItems}</span>
+      <span className={classes.badge}>{ totalQuantity}</span>
     </button>
   );
 };

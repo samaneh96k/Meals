@@ -1,23 +1,36 @@
-import React, { useContext ,useState} from "react";
+import React, {useState} from "react";
 import classes from "./cart.module.css";
 import Modal from "./../Ui/Modal";
-import CartContext from "../../store/cart-context";
 import CartItem from "./CartItem";
 import CheckOut from "./checkOut";
+import { useDispatch, useSelector } from "react-redux";
+import { cartActions } from "../../storeRedux/cart-slice";
+
 const Cart = props => {
   const [isCheckOut,setIsCheckOut]=useState(false)
   const [isSubmiting,setIsSubmiting]=useState(false)
   const [didSubmit,setDidSubmit]=useState(false)
-  const context = useContext(CartContext);
-  const hasItems = context.items.length > 0;
+ const items=useSelector(state=>state.cart.items)
+  const dispatch = useDispatch();
+  const hasItems = items.length > 0;
   const cartItemRemoveHandler = id => {
-    context.removeItem(id);
+    dispatch(cartActions.decrementQuantity(id))
   };
-  const cartItemAddHandler = item => {
-    context.addItem({...item,amount:1})
+  const cartItemAddHandler = id => {
+   dispatch(cartActions.incrementQuantity(id))
   };
   const orderHandler = () => {
     setIsCheckOut(true)
+  }
+
+  const getTotal = () => {
+    let totalQuantity = 0
+    let totalPrice = 0
+    items.forEach(item => {
+      totalQuantity += item.quantity
+      totalPrice += item.price * item.quantity
+    })
+    return {totalPrice, totalQuantity}
   }
   const submitHandler =async (userData) => {
     setIsSubmiting(true)
@@ -25,23 +38,23 @@ const Cart = props => {
       method: "POST",
       body: JSON.stringify({
         user: userData,
-        orderedItems: context.items
+        orderedItems: items
       })
     });
     setIsSubmiting(false);
     setDidSubmit(true);
-    context.clearCart()
+   
   }
   const cartItems = (
     <ul className={classes['cart-items']}>
-      {context.items.map(i =>
+      {items.map(i =>
         <CartItem
           key={i.id}
           name={i.name}
-          amount={i.amount}
+          amount={i.quantity}
           price={i.price}
-          onRemove={cartItemRemoveHandler.bind(null,i.id)}
-          onAdd={cartItemAddHandler.bind(null,i)}
+          onRemove={()=>cartItemRemoveHandler(i.id)}
+          onAdd={()=>cartItemAddHandler(i.id)}
         />
       )}
     </ul>
@@ -50,7 +63,7 @@ const Cart = props => {
     {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
-        {<span>{`$${context.totalAmount.toFixed(2)}`}</span>}
+        {<span>{`$${getTotal().totalPrice.toFixed(2)}`}</span>}
       </div>
       {isCheckOut &&
         <CheckOut onCancel={props.onClose} onConfirm={submitHandler} />}
