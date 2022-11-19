@@ -1,6 +1,9 @@
 import React, { useReducer } from 'react'
 import CartContext from './cart-context';
-
+const existingItemIndex = (items,id) => {
+   items.
+    findIndex((item) => item.id === id);
+ }
 
 const defaultCartState = {
     items: [],
@@ -9,8 +12,7 @@ const defaultCartState = {
 const cartReducer = (state, action) => {
     if (action.type === "ADD") {
         const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
-        const existingCartItemIndex = state.items.
-            findIndex((item) => item.id === action.item.id);
+     const existingCartItemIndex= existingItemIndex(state.items,action.item.id)
         const existingCartItem = state.items[existingCartItemIndex];
   
         let updatedItems;
@@ -32,8 +34,10 @@ const cartReducer = (state, action) => {
     }
 
     if (action.type === "REMOVE") {
-        const existingItemIndex = state.items.
-            findIndex((item) => item.id === action.id);
+  
+        
+            const existingItemIndex=   existingItemIndex(state.items,action.id)
+        
         const existingCartItem = state.items[existingItemIndex];
         const updatedTotalAmount = state.totalAmount - existingCartItem.price;
         let updatedItems;
