@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 import CartContext from './cart-context';
-const existingItemIndex = (items,id) => {
-   items.
+const existingItemIndex = (cartitems,id) => {
+    cartitems.
     findIndex((item) => item.id === id);
  }
 
