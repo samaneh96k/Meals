@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import classes from "./checkOut.module.css";
 const CheckOut = props => {
+
+ 
   const [formInputValidity, setFormInputValidity] = useState({
     name: true,
     street: true,
@@ -44,6 +46,7 @@ const CheckOut = props => {
       postalCode: enteredPostal,
       city: enteredCity
     });
+  props.onClear()
   };
 
   return (

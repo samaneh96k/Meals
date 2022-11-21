@@ -22,7 +22,9 @@ const Cart = props => {
   const orderHandler = () => {
     setIsCheckOut(true)
   }
-
+  const clearItemsHandler = () => {
+    dispatch(cartActions.clearCart())
+}
   const getTotal = () => {
     let totalQuantity = 0
     let totalPrice = 0
@@ -66,7 +68,7 @@ const Cart = props => {
         {<span>{`$${getTotal().totalPrice.toFixed(2)}`}</span>}
       </div>
       {isCheckOut &&
-        <CheckOut onCancel={props.onClose} onConfirm={submitHandler} />}
+        <CheckOut onCancel={props.onClose} onClear={clearItemsHandler} onConfirm={submitHandler} />}
       {!isCheckOut &&
       <div className={classes.actions}>
       <button className={classes["button__alt"]} onClick={props.onClose}>
