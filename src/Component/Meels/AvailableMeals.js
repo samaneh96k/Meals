@@ -36,7 +36,7 @@ const AvailableMeals = () => {
       setHttpError(error.message);
     });
   }, []);
-  console.log(meals);
+
   if (isLoading) {
     return (
       <section className={classes.mealsLoading}>
